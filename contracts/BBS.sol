@@ -1,14 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.18;
 
-contract HelloWorld {
+contract BBS {
     address public owner;
 
     constructor() {
         owner = msg.sender;
-    }
-
-    function hello() pure public returns (string memory) {
-        return "Hello, World!";
     }
 }

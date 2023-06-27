@@ -19,21 +19,19 @@ import type {
   TypedContractMethod,
 } from "./common";
 
-export interface HelloWorldInterface extends Interface {
-  getFunction(nameOrSignature: "hello" | "owner"): FunctionFragment;
+export interface BBSInterface extends Interface {
+  getFunction(nameOrSignature: "owner"): FunctionFragment;
 
-  encodeFunctionData(functionFragment: "hello", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
 
-  decodeFunctionResult(functionFragment: "hello", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
 }
 
-export interface HelloWorld extends BaseContract {
-  connect(runner?: ContractRunner | null): HelloWorld;
+export interface BBS extends BaseContract {
+  connect(runner?: ContractRunner | null): BBS;
   waitForDeployment(): Promise<this>;
 
-  interface: HelloWorldInterface;
+  interface: BBSInterface;
 
   queryFilter<TCEvent extends TypedContractEvent>(
     event: TCEvent,
@@ -72,17 +70,12 @@ export interface HelloWorld extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
-  hello: TypedContractMethod<[], [string], "view">;
-
   owner: TypedContractMethod<[], [string], "view">;
 
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
   ): T;
 
-  getFunction(
-    nameOrSignature: "hello"
-  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "owner"
   ): TypedContractMethod<[], [string], "view">;
