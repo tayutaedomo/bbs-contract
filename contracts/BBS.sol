@@ -30,6 +30,8 @@ contract BBS {
     }
 
     function reply(uint256 parentPostId, string calldata text) external {
+        require(parentPostId <= latestPostId, "Parent post does not exist");
+
         latestPostId = _newPostId(msg.sender);
 
         emit Reply(latestPostId, msg.sender, parentPostId, text);
