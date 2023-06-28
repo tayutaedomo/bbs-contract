@@ -3,8 +3,34 @@ pragma solidity ^0.8.18;
 
 contract BBS {
     address public owner;
+    uint256 public latestPostId;
 
     constructor() {
         owner = msg.sender;
+    }
+
+    event Post(uint256 indexed postId, address indexed user, string text);
+    event Reply(uint256 indexed postId, address indexed user, uint256 indexed parentPostId, string text);
+    event Like(uint256 indexed postId, address indexed user);
+    event Dislike(uint256 indexed postId, address indexed user);
+
+    function post(string calldata text) external {
+        latestPostId++;
+
+        emit Post(latestPostId, msg.sender, text);
+    }
+
+    function reply(uint256 parentPostId, string calldata text) external {
+        latestPostId++;
+
+        emit Reply(latestPostId, msg.sender, parentPostId, text);
+    }
+
+    function like(uint256 postId) external {
+        emit Like(postId, msg.sender);
+    }
+
+    function dislike(uint256 postId) external {
+        emit Dislike(postId, msg.sender);
     }
 }

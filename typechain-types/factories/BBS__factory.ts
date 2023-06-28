@@ -18,6 +18,139 @@ const _abi = [
     type: "constructor",
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "postId",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+    ],
+    name: "Dislike",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "postId",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+    ],
+    name: "Like",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "postId",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "text",
+        type: "string",
+      },
+    ],
+    name: "Post",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "postId",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "parentPostId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "text",
+        type: "string",
+      },
+    ],
+    name: "Reply",
+    type: "event",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "postId",
+        type: "uint256",
+      },
+    ],
+    name: "dislike",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "latestPostId",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "postId",
+        type: "uint256",
+      },
+    ],
+    name: "like",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "owner",
     outputs: [
@@ -30,10 +163,41 @@ const _abi = [
     stateMutability: "view",
     type: "function",
   },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "text",
+        type: "string",
+      },
+    ],
+    name: "post",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "parentPostId",
+        type: "uint256",
+      },
+      {
+        internalType: "string",
+        name: "text",
+        type: "string",
+      },
+    ],
+    name: "reply",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
 ] as const;
 
 const _bytecode =
-  "0x608060405234801561001057600080fd5b50336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060f78061005f6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c80638da5cb5b14602d575b600080fd5b60336047565b604051603e919060a8565b60405180910390f35b60008054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b6000609482606b565b9050919050565b60a281608b565b82525050565b600060208201905060bb6000830184609b565b9291505056fea2646970667358221220ef352a6d879e282b8178514a0a1b355a0ad59a57bffd8d91f77a99cef1209ecb64736f6c63430008120033";
+  "0x608060405234801561001057600080fd5b50336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506105df806100606000396000f3fe608060405234801561001057600080fd5b50600436106100625760003560e01c8063618f8bbb146100675780638da5cb5b146100835780638ee93cf3146100a15780639b15d047146100bd578063d94c783a146100db578063e82935da146100f7575b600080fd5b610081600480360381019061007c91906102eb565b610113565b005b61008b61015a565b6040516100989190610359565b60405180910390f35b6100bb60048036038101906100b691906103d9565b61017e565b005b6100c56101ed565b6040516100d29190610435565b60405180910390f35b6100f560048036038101906100f09190610450565b6101f3565b005b610111600480360381019061010c91906102eb565b610264565b005b3373ffffffffffffffffffffffffffffffffffffffff16817fdef1afee738306af15fd73c8062a7a01352f11d582cc09b8d76f305051a8c80660405160405180910390a350565b60008054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60016000815480929190610191906104df565b91905055503373ffffffffffffffffffffffffffffffffffffffff166001547f68b7cf25914f66b018814b06deea130d84de19369d4fe9adbb99fc5fd38cbf2384846040516101e1929190610585565b60405180910390a35050565b60015481565b60016000815480929190610206906104df565b9190505550823373ffffffffffffffffffffffffffffffffffffffff166001547f14860ab28c6ae50e74a0970b66fb5b475996ae3681ffdadd9c1f8e0702c9f8968585604051610257929190610585565b60405180910390a4505050565b3373ffffffffffffffffffffffffffffffffffffffff16817fda935a3772736202dd12b1bc54cb3460939e447d95d5648c6dbd89836121823a60405160405180910390a350565b600080fd5b600080fd5b6000819050919050565b6102c8816102b5565b81146102d357600080fd5b50565b6000813590506102e5816102bf565b92915050565b600060208284031215610301576103006102ab565b5b600061030f848285016102d6565b91505092915050565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b600061034382610318565b9050919050565b61035381610338565b82525050565b600060208201905061036e600083018461034a565b92915050565b600080fd5b600080fd5b600080fd5b60008083601f84011261039957610398610374565b5b8235905067ffffffffffffffff8111156103b6576103b5610379565b5b6020830191508360018202830111156103d2576103d161037e565b5b9250929050565b600080602083850312156103f0576103ef6102ab565b5b600083013567ffffffffffffffff81111561040e5761040d6102b0565b5b61041a85828601610383565b92509250509250929050565b61042f816102b5565b82525050565b600060208201905061044a6000830184610426565b92915050565b600080600060408486031215610469576104686102ab565b5b6000610477868287016102d6565b935050602084013567ffffffffffffffff811115610498576104976102b0565b5b6104a486828701610383565b92509250509250925092565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b60006104ea826102b5565b91507fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff820361051c5761051b6104b0565b5b600182019050919050565b600082825260208201905092915050565b82818337600083830152505050565b6000601f19601f8301169050919050565b60006105648385610527565b9350610571838584610538565b61057a83610547565b840190509392505050565b600060208201905081810360008301526105a0818486610558565b9050939250505056fea264697066735822122049c9a4d2b93cc7a75862ee2da5c45c4c568f7567bc93534bbbfc6a3758e756cf64736f6c63430008120033";
 
 type BBSConstructorParams =
   | [signer?: Signer]

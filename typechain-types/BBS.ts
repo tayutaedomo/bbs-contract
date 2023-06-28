@@ -3,10 +3,13 @@
 /* eslint-disable */
 import type {
   BaseContract,
+  BigNumberish,
   BytesLike,
   FunctionFragment,
   Result,
   Interface,
+  EventFragment,
+  AddressLike,
   ContractRunner,
   ContractMethod,
   Listener,
@@ -15,16 +18,120 @@ import type {
   TypedContractEvent,
   TypedDeferredTopicFilter,
   TypedEventLog,
+  TypedLogDescription,
   TypedListener,
   TypedContractMethod,
 } from "./common";
 
 export interface BBSInterface extends Interface {
-  getFunction(nameOrSignature: "owner"): FunctionFragment;
+  getFunction(
+    nameOrSignature:
+      | "dislike"
+      | "latestPostId"
+      | "like"
+      | "owner"
+      | "post"
+      | "reply"
+  ): FunctionFragment;
 
+  getEvent(
+    nameOrSignatureOrTopic: "Dislike" | "Like" | "Post" | "Reply"
+  ): EventFragment;
+
+  encodeFunctionData(
+    functionFragment: "dislike",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "latestPostId",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "like", values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(functionFragment: "post", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "reply",
+    values: [BigNumberish, string]
+  ): string;
 
+  decodeFunctionResult(functionFragment: "dislike", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "latestPostId",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "like", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "post", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "reply", data: BytesLike): Result;
+}
+
+export namespace DislikeEvent {
+  export type InputTuple = [postId: BigNumberish, user: AddressLike];
+  export type OutputTuple = [postId: bigint, user: string];
+  export interface OutputObject {
+    postId: bigint;
+    user: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace LikeEvent {
+  export type InputTuple = [postId: BigNumberish, user: AddressLike];
+  export type OutputTuple = [postId: bigint, user: string];
+  export interface OutputObject {
+    postId: bigint;
+    user: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace PostEvent {
+  export type InputTuple = [
+    postId: BigNumberish,
+    user: AddressLike,
+    text: string
+  ];
+  export type OutputTuple = [postId: bigint, user: string, text: string];
+  export interface OutputObject {
+    postId: bigint;
+    user: string;
+    text: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace ReplyEvent {
+  export type InputTuple = [
+    postId: BigNumberish,
+    user: AddressLike,
+    parentPostId: BigNumberish,
+    text: string
+  ];
+  export type OutputTuple = [
+    postId: bigint,
+    user: string,
+    parentPostId: bigint,
+    text: string
+  ];
+  export interface OutputObject {
+    postId: bigint;
+    user: string;
+    parentPostId: bigint;
+    text: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
 }
 
 export interface BBS extends BaseContract {
@@ -70,15 +177,121 @@ export interface BBS extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
+  dislike: TypedContractMethod<[postId: BigNumberish], [void], "nonpayable">;
+
+  latestPostId: TypedContractMethod<[], [bigint], "view">;
+
+  like: TypedContractMethod<[postId: BigNumberish], [void], "nonpayable">;
+
   owner: TypedContractMethod<[], [string], "view">;
+
+  post: TypedContractMethod<[text: string], [void], "nonpayable">;
+
+  reply: TypedContractMethod<
+    [parentPostId: BigNumberish, text: string],
+    [void],
+    "nonpayable"
+  >;
 
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
   ): T;
 
   getFunction(
+    nameOrSignature: "dislike"
+  ): TypedContractMethod<[postId: BigNumberish], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "latestPostId"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "like"
+  ): TypedContractMethod<[postId: BigNumberish], [void], "nonpayable">;
+  getFunction(
     nameOrSignature: "owner"
   ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "post"
+  ): TypedContractMethod<[text: string], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "reply"
+  ): TypedContractMethod<
+    [parentPostId: BigNumberish, text: string],
+    [void],
+    "nonpayable"
+  >;
 
-  filters: {};
+  getEvent(
+    key: "Dislike"
+  ): TypedContractEvent<
+    DislikeEvent.InputTuple,
+    DislikeEvent.OutputTuple,
+    DislikeEvent.OutputObject
+  >;
+  getEvent(
+    key: "Like"
+  ): TypedContractEvent<
+    LikeEvent.InputTuple,
+    LikeEvent.OutputTuple,
+    LikeEvent.OutputObject
+  >;
+  getEvent(
+    key: "Post"
+  ): TypedContractEvent<
+    PostEvent.InputTuple,
+    PostEvent.OutputTuple,
+    PostEvent.OutputObject
+  >;
+  getEvent(
+    key: "Reply"
+  ): TypedContractEvent<
+    ReplyEvent.InputTuple,
+    ReplyEvent.OutputTuple,
+    ReplyEvent.OutputObject
+  >;
+
+  filters: {
+    "Dislike(uint256,address)": TypedContractEvent<
+      DislikeEvent.InputTuple,
+      DislikeEvent.OutputTuple,
+      DislikeEvent.OutputObject
+    >;
+    Dislike: TypedContractEvent<
+      DislikeEvent.InputTuple,
+      DislikeEvent.OutputTuple,
+      DislikeEvent.OutputObject
+    >;
+
+    "Like(uint256,address)": TypedContractEvent<
+      LikeEvent.InputTuple,
+      LikeEvent.OutputTuple,
+      LikeEvent.OutputObject
+    >;
+    Like: TypedContractEvent<
+      LikeEvent.InputTuple,
+      LikeEvent.OutputTuple,
+      LikeEvent.OutputObject
+    >;
+
+    "Post(uint256,address,string)": TypedContractEvent<
+      PostEvent.InputTuple,
+      PostEvent.OutputTuple,
+      PostEvent.OutputObject
+    >;
+    Post: TypedContractEvent<
+      PostEvent.InputTuple,
+      PostEvent.OutputTuple,
+      PostEvent.OutputObject
+    >;
+
+    "Reply(uint256,address,uint256,string)": TypedContractEvent<
+      ReplyEvent.InputTuple,
+      ReplyEvent.OutputTuple,
+      ReplyEvent.OutputObject
+    >;
+    Reply: TypedContractEvent<
+      ReplyEvent.InputTuple,
+      ReplyEvent.OutputTuple,
+      ReplyEvent.OutputObject
+    >;
+  };
 }
