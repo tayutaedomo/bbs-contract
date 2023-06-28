@@ -64,6 +64,9 @@ describe("BBS", function () {
       await bbs.connect(account1).post("First Post");
       await bbs.connect(account2).like(postId);
 
+      await expect(bbs.connect(account2).like(postId + 1)).to.be.revertedWith("Post does not exist");
+      await expect(bbs.connect(account1).like(postId)).to.be.revertedWith("Only others can perform this action");
+
       const events = await bbs.queryFilter(bbs.filters.Like(postId));
 
       expect(events[0].args.postId).to.equal(postId);
@@ -78,6 +81,9 @@ describe("BBS", function () {
 
       await bbs.connect(account1).post("First Post");
       await bbs.connect(account2).dislike(postId);
+
+      await expect(bbs.connect(account2).dislike(postId + 1)).to.be.revertedWith("Post does not exist");
+      await expect(bbs.connect(account1).dislike(postId)).to.be.revertedWith("Only others can perform this action");
 
       const events = await bbs.queryFilter(bbs.filters.Dislike(postId));
 
