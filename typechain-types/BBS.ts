@@ -29,6 +29,7 @@ export interface BBSInterface extends Interface {
       | "dislike"
       | "latestPostId"
       | "like"
+      | "likeStates"
       | "owner"
       | "post"
       | "postOwners"
@@ -48,6 +49,10 @@ export interface BBSInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "like", values: [BigNumberish]): string;
+  encodeFunctionData(
+    functionFragment: "likeStates",
+    values: [BigNumberish, AddressLike]
+  ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(functionFragment: "post", values: [string]): string;
   encodeFunctionData(
@@ -65,6 +70,7 @@ export interface BBSInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "like", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "likeStates", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "post", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "postOwners", data: BytesLike): Result;
@@ -189,6 +195,12 @@ export interface BBS extends BaseContract {
 
   like: TypedContractMethod<[postId: BigNumberish], [void], "nonpayable">;
 
+  likeStates: TypedContractMethod<
+    [arg0: BigNumberish, arg1: AddressLike],
+    [bigint],
+    "view"
+  >;
+
   owner: TypedContractMethod<[], [string], "view">;
 
   post: TypedContractMethod<[text: string], [void], "nonpayable">;
@@ -214,6 +226,13 @@ export interface BBS extends BaseContract {
   getFunction(
     nameOrSignature: "like"
   ): TypedContractMethod<[postId: BigNumberish], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "likeStates"
+  ): TypedContractMethod<
+    [arg0: BigNumberish, arg1: AddressLike],
+    [bigint],
+    "view"
+  >;
   getFunction(
     nameOrSignature: "owner"
   ): TypedContractMethod<[], [string], "view">;

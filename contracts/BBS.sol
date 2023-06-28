@@ -8,6 +8,10 @@ contract BBS {
     uint256 public latestPostId;
     address[] public postOwners; // Index is postId - 1
 
+    mapping(uint256 => mapping(address => int8)) public likeStates; // postId -> user -> like state
+    int8 constant LIKE = 1;
+    int8 constant DISLIKE = -1;
+
     constructor() {
         owner = msg.sender;
     }
@@ -44,10 +48,18 @@ contract BBS {
     }
 
     function like(uint256 postId) external onlyOthers(postId) {
+        _setLikeState(postId, msg.sender, LIKE);
         emit Like(postId, msg.sender);
     }
 
     function dislike(uint256 postId) external onlyOthers(postId) {
+        _setLikeState(postId, msg.sender, DISLIKE);
         emit Dislike(postId, msg.sender);
+    }
+
+    function _setLikeState(uint256 postId, address user, int8 state) private {
+        require(likeStates[postId][user] == 0, "Like state is already set");
+
+        likeStates[postId][user] = state;
     }
 }
