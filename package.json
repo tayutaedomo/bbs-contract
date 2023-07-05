@@ -9,6 +9,7 @@
   "scripts": {
     "prettier:check": "prettier --check \"test/*.ts\"",
     "compile": "npx hardhat compile",
+    "slither": "npm run compile && slither . --skip-clean --ignore-compile ",
     "node": "npx hardhat node",
     "test": "REPORT_GAS=true npx hardhat test",
     "deploy:local": "npx hardhat run scripts/deploy.ts --network localhost"

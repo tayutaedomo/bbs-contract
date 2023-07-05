@@ -137,3 +137,4 @@ dist
 
 artifacts/
 cache/
+venv/
