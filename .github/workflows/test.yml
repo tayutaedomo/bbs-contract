@@ -1,9 +1,11 @@
 name: test
 on:
   push:
+    branches:
+      - main
   pull_request:
     branches:
-      - master
+      - main
 jobs:
   unit-test:
     name: Unit Test

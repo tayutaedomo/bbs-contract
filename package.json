@@ -1,5 +1,5 @@
 {
-  "name": "solidity-my-boilerplate",
+  "name": "bbs-contract",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,7 +11,7 @@
     "compile": "npx hardhat compile",
     "slither": "npm run compile && slither . --skip-clean --ignore-compile ",
     "node": "npx hardhat node",
-    "test": "REPORT_GAS=true npx hardhat test",
+    "test": "npx hardhat test",
     "deploy:local": "npx hardhat run scripts/deploy.ts --network localhost"
   },
   "devDependencies": {
