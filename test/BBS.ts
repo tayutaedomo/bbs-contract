@@ -12,13 +12,6 @@ describe("BBS", function () {
     return { bbs, owner, account1, account2 };
   }
 
-  describe("デプロイ", function () {
-    it("正しいオーナーがセットされる", async function () {
-      const { bbs, owner } = await loadFixture(deployFixture);
-      expect(await bbs.owner()).to.equal(owner.address);
-    });
-  });
-
   describe("post", function () {
     it("投稿することができる", async function () {
       const { bbs, account1 } = await loadFixture(deployFixture);

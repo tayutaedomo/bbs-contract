@@ -4,7 +4,6 @@ pragma solidity ^0.8.18;
 import "hardhat/console.sol";
 
 contract BBS {
-    address public owner;
     uint256 public latestPostId;
     address[] public postOwners; // Index is postId - 1
 
@@ -12,9 +11,7 @@ contract BBS {
     int8 constant LIKE = 1;
     int8 constant DISLIKE = -1;
 
-    constructor() {
-        owner = msg.sender;
-    }
+    constructor() {}
 
     modifier onlyOthers(uint256 postId) {
         require(postId <= latestPostId, "Post does not exist");
