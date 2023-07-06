@@ -4,13 +4,13 @@ pragma solidity ^0.8.18;
 import "hardhat/console.sol";
 
 contract BBS {
-    struct PostData {
+    struct Post {
         address owner;
         mapping(address => int8) likeStates; // user -> like state
     }
 
     uint256 public latestPostId;
-    mapping(uint256 => PostData) public posts; // postId -> post data
+    mapping(uint256 => Post) public posts; // postId -> post data
     int8 constant LIKE = 1;
     int8 constant DISLIKE = -1;
 
@@ -22,40 +22,40 @@ contract BBS {
         _;
     }
 
-    event Post(uint256 indexed postId, address indexed user, string text);
-    event Reply(uint256 indexed postId, address indexed user, uint256 indexed parentPostId, string text);
-    event Like(uint256 indexed postId, address indexed user);
-    event Dislike(uint256 indexed postId, address indexed user);
+    event Posted(uint256 indexed postId, address indexed user, string text);
+    event Replied(uint256 indexed postId, address indexed user, uint256 indexed parentPostId, string text);
+    event Liked(uint256 indexed postId, address indexed user);
+    event Disliked(uint256 indexed postId, address indexed user);
 
     function post(string calldata text) external {
-        latestPostId = _newPostId(msg.sender);
+        latestPostId = _createNewPost(msg.sender);
 
-        emit Post(latestPostId, msg.sender, text);
+        emit Posted(latestPostId, msg.sender, text);
     }
 
     function reply(uint256 parentPostId, string calldata text) external {
         require(parentPostId <= latestPostId, "Parent post does not exist");
 
-        latestPostId = _newPostId(msg.sender);
+        latestPostId = _createNewPost(msg.sender);
 
-        emit Reply(latestPostId, msg.sender, parentPostId, text);
+        emit Replied(latestPostId, msg.sender, parentPostId, text);
     }
 
-    function _newPostId(address user) private returns (uint256) {
+    function _createNewPost(address user) private returns (uint256) {
         latestPostId++;
-        PostData storage newPost = posts[latestPostId];
+        Post storage newPost = posts[latestPostId];
         newPost.owner = user;
         return latestPostId;
     }
 
     function like(uint256 postId) external postExistsAndNotOwner(postId) {
         _setLikeState(postId, msg.sender, LIKE);
-        emit Like(postId, msg.sender);
+        emit Liked(postId, msg.sender);
     }
 
     function dislike(uint256 postId) external postExistsAndNotOwner(postId) {
         _setLikeState(postId, msg.sender, DISLIKE);
-        emit Dislike(postId, msg.sender);
+        emit Disliked(postId, msg.sender);
     }
 
     function _setLikeState(uint256 postId, address user, int8 state) private {

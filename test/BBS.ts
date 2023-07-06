@@ -20,7 +20,7 @@ describe("BBS", function () {
 
       await bbs.connect(account1).post(text);
 
-      const events = await bbs.queryFilter(bbs.filters.Post(postId));
+      const events = await bbs.queryFilter(bbs.filters.Posted(postId));
 
       expect(await bbs.latestPostId()).to.equal(postId);
       expect(events[0].args.postId).to.equal(postId);
@@ -45,7 +45,7 @@ describe("BBS", function () {
 
       await bbs.connect(account1).reply(parentPostId, text2); // 自身の投稿に返信することが可能
 
-      const events = await bbs.queryFilter(bbs.filters.Reply(undefined, undefined, parentPostId));
+      const events = await bbs.queryFilter(bbs.filters.Replied(undefined, undefined, parentPostId));
 
       expect(await bbs.latestPostId()).to.equal(postId2);
 
@@ -74,7 +74,7 @@ describe("BBS", function () {
       await expect(bbs.connect(account2).dislike(postId)).to.be.revertedWith("Like state is already set");
       await expect(bbs.connect(account1).like(postId)).to.be.revertedWith("Only others can perform this action");
 
-      const events = await bbs.queryFilter(bbs.filters.Like(postId));
+      const events = await bbs.queryFilter(bbs.filters.Liked(postId));
 
       expect(events[0].args.postId).to.equal(postId);
       expect(events[0].args.user).to.equal(account2.address);
@@ -94,7 +94,7 @@ describe("BBS", function () {
       await expect(bbs.connect(account2).like(postId)).to.be.revertedWith("Like state is already set");
       await expect(bbs.connect(account1).dislike(postId)).to.be.revertedWith("Only others can perform this action");
 
-      const events = await bbs.queryFilter(bbs.filters.Dislike(postId));
+      const events = await bbs.queryFilter(bbs.filters.Disliked(postId));
 
       expect(events[0].args.postId).to.equal(postId);
       expect(events[0].args.user).to.equal(account2.address);

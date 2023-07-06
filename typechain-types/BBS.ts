@@ -35,7 +35,7 @@ export interface BBSInterface extends Interface {
   ): FunctionFragment;
 
   getEvent(
-    nameOrSignatureOrTopic: "Dislike" | "Like" | "Post" | "Reply"
+    nameOrSignatureOrTopic: "Disliked" | "Liked" | "Posted" | "Replied"
   ): EventFragment;
 
   encodeFunctionData(
@@ -65,7 +65,7 @@ export interface BBSInterface extends Interface {
   decodeFunctionResult(functionFragment: "reply", data: BytesLike): Result;
 }
 
-export namespace DislikeEvent {
+export namespace DislikedEvent {
   export type InputTuple = [postId: BigNumberish, user: AddressLike];
   export type OutputTuple = [postId: bigint, user: string];
   export interface OutputObject {
@@ -78,7 +78,7 @@ export namespace DislikeEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace LikeEvent {
+export namespace LikedEvent {
   export type InputTuple = [postId: BigNumberish, user: AddressLike];
   export type OutputTuple = [postId: bigint, user: string];
   export interface OutputObject {
@@ -91,7 +91,7 @@ export namespace LikeEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace PostEvent {
+export namespace PostedEvent {
   export type InputTuple = [
     postId: BigNumberish,
     user: AddressLike,
@@ -109,7 +109,7 @@ export namespace PostEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace ReplyEvent {
+export namespace RepliedEvent {
   export type InputTuple = [
     postId: BigNumberish,
     user: AddressLike,
@@ -221,77 +221,77 @@ export interface BBS extends BaseContract {
   >;
 
   getEvent(
-    key: "Dislike"
+    key: "Disliked"
   ): TypedContractEvent<
-    DislikeEvent.InputTuple,
-    DislikeEvent.OutputTuple,
-    DislikeEvent.OutputObject
+    DislikedEvent.InputTuple,
+    DislikedEvent.OutputTuple,
+    DislikedEvent.OutputObject
   >;
   getEvent(
-    key: "Like"
+    key: "Liked"
   ): TypedContractEvent<
-    LikeEvent.InputTuple,
-    LikeEvent.OutputTuple,
-    LikeEvent.OutputObject
+    LikedEvent.InputTuple,
+    LikedEvent.OutputTuple,
+    LikedEvent.OutputObject
   >;
   getEvent(
-    key: "Post"
+    key: "Posted"
   ): TypedContractEvent<
-    PostEvent.InputTuple,
-    PostEvent.OutputTuple,
-    PostEvent.OutputObject
+    PostedEvent.InputTuple,
+    PostedEvent.OutputTuple,
+    PostedEvent.OutputObject
   >;
   getEvent(
-    key: "Reply"
+    key: "Replied"
   ): TypedContractEvent<
-    ReplyEvent.InputTuple,
-    ReplyEvent.OutputTuple,
-    ReplyEvent.OutputObject
+    RepliedEvent.InputTuple,
+    RepliedEvent.OutputTuple,
+    RepliedEvent.OutputObject
   >;
 
   filters: {
-    "Dislike(uint256,address)": TypedContractEvent<
-      DislikeEvent.InputTuple,
-      DislikeEvent.OutputTuple,
-      DislikeEvent.OutputObject
+    "Disliked(uint256,address)": TypedContractEvent<
+      DislikedEvent.InputTuple,
+      DislikedEvent.OutputTuple,
+      DislikedEvent.OutputObject
     >;
-    Dislike: TypedContractEvent<
-      DislikeEvent.InputTuple,
-      DislikeEvent.OutputTuple,
-      DislikeEvent.OutputObject
-    >;
-
-    "Like(uint256,address)": TypedContractEvent<
-      LikeEvent.InputTuple,
-      LikeEvent.OutputTuple,
-      LikeEvent.OutputObject
-    >;
-    Like: TypedContractEvent<
-      LikeEvent.InputTuple,
-      LikeEvent.OutputTuple,
-      LikeEvent.OutputObject
+    Disliked: TypedContractEvent<
+      DislikedEvent.InputTuple,
+      DislikedEvent.OutputTuple,
+      DislikedEvent.OutputObject
     >;
 
-    "Post(uint256,address,string)": TypedContractEvent<
-      PostEvent.InputTuple,
-      PostEvent.OutputTuple,
-      PostEvent.OutputObject
+    "Liked(uint256,address)": TypedContractEvent<
+      LikedEvent.InputTuple,
+      LikedEvent.OutputTuple,
+      LikedEvent.OutputObject
     >;
-    Post: TypedContractEvent<
-      PostEvent.InputTuple,
-      PostEvent.OutputTuple,
-      PostEvent.OutputObject
+    Liked: TypedContractEvent<
+      LikedEvent.InputTuple,
+      LikedEvent.OutputTuple,
+      LikedEvent.OutputObject
     >;
 
-    "Reply(uint256,address,uint256,string)": TypedContractEvent<
-      ReplyEvent.InputTuple,
-      ReplyEvent.OutputTuple,
-      ReplyEvent.OutputObject
+    "Posted(uint256,address,string)": TypedContractEvent<
+      PostedEvent.InputTuple,
+      PostedEvent.OutputTuple,
+      PostedEvent.OutputObject
     >;
-    Reply: TypedContractEvent<
-      ReplyEvent.InputTuple,
-      ReplyEvent.OutputTuple,
-      ReplyEvent.OutputObject
+    Posted: TypedContractEvent<
+      PostedEvent.InputTuple,
+      PostedEvent.OutputTuple,
+      PostedEvent.OutputObject
+    >;
+
+    "Replied(uint256,address,uint256,string)": TypedContractEvent<
+      RepliedEvent.InputTuple,
+      RepliedEvent.OutputTuple,
+      RepliedEvent.OutputObject
+    >;
+    Replied: TypedContractEvent<
+      RepliedEvent.InputTuple,
+      RepliedEvent.OutputTuple,
+      RepliedEvent.OutputObject
     >;
   };
 }
