@@ -13,7 +13,7 @@ contract BBS {
 
     constructor() {}
 
-    modifier onlyOthers(uint256 postId) {
+    modifier postExistsAndNotOwner(uint256 postId) {
         require(postId <= latestPostId, "Post does not exist");
         require(msg.sender != postOwners[postId - 1], "Only others can perform this action");
         _;
@@ -44,12 +44,12 @@ contract BBS {
         return latestPostId;
     }
 
-    function like(uint256 postId) external onlyOthers(postId) {
+    function like(uint256 postId) external postExistsAndNotOwner(postId) {
         _setLikeState(postId, msg.sender, LIKE);
         emit Like(postId, msg.sender);
     }
 
-    function dislike(uint256 postId) external onlyOthers(postId) {
+    function dislike(uint256 postId) external postExistsAndNotOwner(postId) {
         _setLikeState(postId, msg.sender, DISLIKE);
         emit Dislike(postId, msg.sender);
     }
