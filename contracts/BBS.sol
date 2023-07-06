@@ -4,10 +4,13 @@ pragma solidity ^0.8.18;
 import "hardhat/console.sol";
 
 contract BBS {
-    uint256 public latestPostId;
-    address[] public postOwners; // Index is postId - 1
+    struct PostData {
+        address owner;
+        mapping(address => int8) likeStates; // user -> like state
+    }
 
-    mapping(uint256 => mapping(address => int8)) public likeStates; // postId -> user -> like state
+    uint256 public latestPostId;
+    mapping(uint256 => PostData) public posts; // postId -> post data
     int8 constant LIKE = 1;
     int8 constant DISLIKE = -1;
 
@@ -15,7 +18,7 @@ contract BBS {
 
     modifier postExistsAndNotOwner(uint256 postId) {
         require(postId <= latestPostId, "Post does not exist");
-        require(msg.sender != postOwners[postId - 1], "Only others can perform this action");
+        require(msg.sender != posts[postId].owner, "Only others can perform this action");
         _;
     }
 
@@ -40,7 +43,8 @@ contract BBS {
 
     function _newPostId(address user) private returns (uint256) {
         latestPostId++;
-        postOwners.push(user);
+        PostData storage newPost = posts[latestPostId];
+        newPost.owner = user;
         return latestPostId;
     }
 
@@ -55,8 +59,8 @@ contract BBS {
     }
 
     function _setLikeState(uint256 postId, address user, int8 state) private {
-        require(likeStates[postId][user] == 0, "Like state is already set");
+        require(posts[postId].likeStates[user] == 0, "Like state is already set");
 
-        likeStates[postId][user] = state;
+        posts[postId].likeStates[user] = state;
     }
 }
