@@ -2,5 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { BBS } from "./BBS";
+export type { TipBBS } from "./TipBBS";
 export * as factories from "./factories";
 export { BBS__factory } from "./factories/BBS__factory";
+export { TipBBS__factory } from "./factories/TipBBS__factory";

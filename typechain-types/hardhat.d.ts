@@ -16,23 +16,41 @@ declare module "hardhat/types/runtime" {
       name: "BBS",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.BBS__factory>;
+    getContractFactory(
+      name: "TipBBS",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.TipBBS__factory>;
 
     getContractAt(
       name: "BBS",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.BBS>;
+    getContractAt(
+      name: "TipBBS",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.TipBBS>;
 
     deployContract(
       name: "BBS",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.BBS>;
+    deployContract(
+      name: "TipBBS",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.TipBBS>;
 
     deployContract(
       name: "BBS",
       args: any[],
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.BBS>;
+    deployContract(
+      name: "TipBBS",
+      args: any[],
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.TipBBS>;
 
     // default types
     getContractFactory(

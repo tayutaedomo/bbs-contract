@@ -2,3 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export { BBS__factory } from "./BBS__factory";
+export { TipBBS__factory } from "./TipBBS__factory";
