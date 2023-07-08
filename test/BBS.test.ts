@@ -41,6 +41,7 @@ describe("BBS", function () {
       await bbs.connect(account1).post("First Post");
       await bbs.connect(account2).reply(parentPostId, text1);
 
+      // 親投稿が存在しない場合はエラー
       await expect(bbs.connect(account2).reply(postId1 + 1, text1)).to.be.revertedWith("Parent post does not exist");
 
       await bbs.connect(account1).reply(parentPostId, text2); // 自身の投稿に返信することが可能
@@ -69,9 +70,13 @@ describe("BBS", function () {
       await bbs.connect(account1).post("First Post");
       await bbs.connect(account2).like(postId);
 
+      // 存在しない投稿の場合はエラー
       await expect(bbs.connect(account2).like(postId + 1)).to.be.revertedWith("Post does not exist");
+      // 既に like している場合はエラー
       await expect(bbs.connect(account2).like(postId)).to.be.revertedWith("Like state is already set");
+      // 既に like or dislike している場合はエラー
       await expect(bbs.connect(account2).dislike(postId)).to.be.revertedWith("Like state is already set");
+      // 自身の投稿に like しようとした場合はエラー
       await expect(bbs.connect(account1).like(postId)).to.be.revertedWith("Only others can perform this action");
 
       const events = await bbs.queryFilter(bbs.filters.Liked(postId));
@@ -89,9 +94,13 @@ describe("BBS", function () {
       await bbs.connect(account1).post("First Post");
       await bbs.connect(account2).dislike(postId);
 
+      // 存在しない投稿の場合はエラー
       await expect(bbs.connect(account2).dislike(postId + 1)).to.be.revertedWith("Post does not exist");
+      // 既に like している場合はエラー
       await expect(bbs.connect(account2).dislike(postId)).to.be.revertedWith("Like state is already set");
+      // 既に like or dislike している場合はエラー
       await expect(bbs.connect(account2).like(postId)).to.be.revertedWith("Like state is already set");
+      // 自身の投稿に dislike しようとした場合はエラー
       await expect(bbs.connect(account1).dislike(postId)).to.be.revertedWith("Only others can perform this action");
 
       const events = await bbs.queryFilter(bbs.filters.Disliked(postId));
