@@ -27,13 +27,13 @@ contract BBS {
     event Liked(uint256 indexed postId, address indexed user);
     event Disliked(uint256 indexed postId, address indexed user);
 
-    function post(string calldata text) external {
+    function post(string calldata text) public {
         latestPostId = _createNewPost(msg.sender);
 
         emit Posted(latestPostId, msg.sender, text);
     }
 
-    function reply(uint256 parentPostId, string calldata text) external {
+    function reply(uint256 parentPostId, string calldata text) public {
         require(parentPostId <= latestPostId, "Parent post does not exist");
 
         latestPostId = _createNewPost(msg.sender);
@@ -41,24 +41,24 @@ contract BBS {
         emit Replied(latestPostId, msg.sender, parentPostId, text);
     }
 
-    function _createNewPost(address user) private returns (uint256) {
+    function _createNewPost(address user) internal returns (uint256) {
         latestPostId++;
         Post storage newPost = posts[latestPostId];
         newPost.owner = user;
         return latestPostId;
     }
 
-    function like(uint256 postId) external postExistsAndNotOwner(postId) {
+    function like(uint256 postId) public postExistsAndNotOwner(postId) {
         _setLikeState(postId, msg.sender, LIKE);
         emit Liked(postId, msg.sender);
     }
 
-    function dislike(uint256 postId) external postExistsAndNotOwner(postId) {
+    function dislike(uint256 postId) public postExistsAndNotOwner(postId) {
         _setLikeState(postId, msg.sender, DISLIKE);
         emit Disliked(postId, msg.sender);
     }
 
-    function _setLikeState(uint256 postId, address user, int8 state) private {
+    function _setLikeState(uint256 postId, address user, int8 state) internal {
         require(posts[postId].likeStates[user] == 0, "Like state is already set");
 
         posts[postId].likeStates[user] = state;
