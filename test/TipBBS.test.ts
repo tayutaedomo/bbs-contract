@@ -2,18 +2,9 @@ import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-const oneEtherInWei = BigInt(1e18); // 1 Ether in Wei
-const fiveEtherInWei = BigInt(5e18); // 5 Ether in Wei
-
 describe("TipBBS", function () {
   async function deployFixture() {
     const [owner, account1, account2] = await ethers.getSigners();
-
-    await account1.sendTransaction({
-      to: account1.address,
-      //value: ethers.utils.parseEther("5.0"),
-      value: fiveEtherInWei.toString(),
-    });
 
     const BBS = await ethers.getContractFactory("TipBBS");
     const bbs = await BBS.deploy();
@@ -91,35 +82,40 @@ describe("TipBBS", function () {
   });
 
   describe("likeWithTip", function () {
-    xit("like 時に送金ができる", async function () {
+    it("like 時に送金ができる", async function () {
       const { bbs, account1, account2 } = await loadFixture(deployFixture);
       const postId = 1;
-      // const tipAmount = ethers.utils.parseEther("1");
-      const tipAmount = oneEtherInWei.toString();
+      const tipAmount = ethers.parseEther("1");
+      const tipAmountBigInt = BigInt(tipAmount.toString());
 
       await bbs.connect(account1).post("First Post");
 
-      const prevBalance = await ethers.provider.getBalance(account1.address);
+      const account1PrevBalance = await ethers.provider.getBalance(account1.address);
+      const account2PrevBalance = await ethers.provider.getBalance(account2.address);
       const tx = await bbs.connect(account2).likeWithTip(postId, { value: tipAmount });
-
-      // 残高を確認するためにガス代を取得しておく
       const receipt = await tx.wait();
-      // const gasUsed = receipt.gasUsed;
-      const gasUsed = ethers.BigNumber.from(receipt.gasUsed.toString());
-      const txCost = gasUsed.mul(tx.gasPrice);
+      expect(receipt).to.exist;
 
-      // Check if the new balance of post owner is increased by 1 Ether
-      const newBalance = await ethers.provider.getBalance(account1.address);
-      expect(newBalance).to.equal(prevBalance.add(tipAmount).sub(txCost));
+      // account1 に送金されていることを確認する
+      const account1NewBalance = await ethers.provider.getBalance(account1.address);
+      const account1PrevBalanceBigInt = BigInt(account1PrevBalance.toString());
+      expect(BigInt(account1NewBalance.toString())).to.equal(account1PrevBalanceBigInt + tipAmountBigInt);
 
-      // Check if the appropriate events have been emitted
+      // account2 が送金していることを確認する
+      const gasUsed = BigInt(receipt!.gasUsed.toString());
+      const txPrice = BigInt(tx.gasPrice.toString());
+      const txCost = gasUsed * txPrice;
+      const account2PrevBalanceBigInt = BigInt(account2PrevBalance.toString());
+      const account2NewBalance = await ethers.provider.getBalance(account2.address);
+      expect(BigInt(account2NewBalance.toString())).to.equal(account2PrevBalanceBigInt - tipAmountBigInt - txCost);
+
       const tipEvents = await bbs.queryFilter(bbs.filters.Tipped(postId));
       expect(tipEvents[0].args.postId).to.equal(postId);
       expect(tipEvents[0].args.user).to.equal(account2.address);
       expect(tipEvents[0].args.value).to.equal(tipAmount);
     });
 
-    it("like 時に金額の指定がない場合はエラー", async function () {
+    it("like 時に金額の指定がない場合はエラーになる", async function () {
       const { bbs, account1, account2 } = await loadFixture(deployFixture);
       const postId = 1;
 
